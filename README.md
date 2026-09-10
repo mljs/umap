@@ -165,6 +165,35 @@ graph a fit needs is not part of the format.
 | `transformQueueSize`   | `4`           | Search breadth multiplier used by `transform`                 |
 | `transformSeed`        | `42`          | Seed the projection of new points draws from                  |
 
+### Choosing numberOfComponents
+
+Two or three components is what a plot needs, and that is what the default is
+for. When the embedding feeds something else — a clustering, a classifier, a
+nearest-neighbour index — more room helps, but not without limit: neighbourhood
+preservation, trustworthiness and continuity rise steeply and then go flat, and
+the knee sits between eight and ten components on every dataset measured,
+including one built with an intrinsic dimension of 20. Downstream accuracy
+behaves the same way. On 20 overlapping Gaussians in 50 dimensions, leave-one-out
+10-nearest-neighbour accuracy went 0.353 at two components, 0.488 at five, 0.514
+at eight and 0.517 at ten, then stopped moving — against 0.542 measured on the
+input data itself, with a seed-to-seed spread of 0.005 to 0.01.
+
+| The embedding is for                        | numberOfComponents |
+| ------------------------------------------- | ------------------ |
+| looking at                                  | `2` or `3`         |
+| clustering, a classifier, a neighbour index | `10`               |
+
+Do not derive the value from an estimate of the intrinsic dimension of the data.
+Levina-Bickel MLE, TwoNN, correlation dimension and the PCA participation ratio
+all overshoot the useful number of components by three to twenty times as soon as
+the data has cluster structure or noise — 25 and 29 where the quality curves had
+flattened by 10 — and they follow the noise rather than the structure: on a
+5-dimensional subspace of a 100-dimensional space, per-coordinate Gaussian noise
+of standard deviation 0.05 takes the MLE from 4.7 to 10.1 and TwoNN from 5.5 to
+17.5. A constant near ten is the better estimator. Neither umap-learn nor the
+UMAP paper offers a selection rule of its own; the paper calls the effect of the
+embedding dimension "largely self-evident".
+
 ### Reproducibility
 
 Runs repeat by default. `random` is a generator seeded with `seed` (default

@@ -11,6 +11,7 @@ import {
   testData,
   testLabels,
 } from './data/upstream-fixtures.ts';
+import { nearestNeighborIndex } from './embeddings.ts';
 import { makeRandom } from './random.ts';
 
 // A full fit is 500 epochs over 100 points and exceeds the 5s vitest default.
@@ -209,32 +210,4 @@ function manhattan(x: Vector, y: Vector): number {
     distance += Math.abs(xi - yi);
   }
   return distance;
-}
-
-/**
- * Index of the item closest to a point under the euclidean metric.
- * @param items - The candidate points.
- * @param point - The point to locate.
- * @returns Index of the nearest item.
- */
-function nearestNeighborIndex(items: number[][], point: number[]): number {
-  let bestIndex = 0;
-  let bestDistance = Infinity;
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    if (item === undefined) continue;
-    let sum = 0;
-    for (let j = 0; j < point.length; j++) {
-      const a = item[j];
-      const b = point[j];
-      if (a === undefined || b === undefined) continue;
-      const d = a - b;
-      sum += d * d;
-    }
-    if (sum < bestDistance) {
-      bestDistance = sum;
-      bestIndex = i;
-    }
-  }
-  return bestIndex;
 }

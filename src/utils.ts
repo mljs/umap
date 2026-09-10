@@ -2,8 +2,8 @@
  * Derived from umap-js (https://github.com/PAIR-code/umap-js)
  * Copyright 2019 Google LLC. Licensed under the Apache License, Version 2.0.
  * Modified for ml-umap: ported to strict TypeScript, callback array iteration
- * replaced by loops, the `RandomFn` type moved here, `min` and `vectorsEqual`
- * helpers added, and the array constructors split into ./arrays.ts
+ * replaced by loops, the `RandomFn` type moved here, the `vectorsEqual` helper
+ * added, and the array constructors split into ./arrays.ts
  * (re-exported here) to respect the 250 line file limit. Arithmetic and
  * iteration order are unchanged.
  */
@@ -33,19 +33,6 @@ export function tauRandInt(n: number, random: RandomFn): number {
  */
 export function tauRand(random: RandomFn): number {
   return random();
-}
-
-/**
- * Compute the (standard l2) norm of a vector.
- * @param vec - The vector.
- * @returns The euclidean length of the vector.
- */
-export function norm(vec: number[]): number {
-  let result = 0;
-  for (const item of vec) {
-    result += item * item;
-  }
-  return Math.sqrt(result);
 }
 
 /**
@@ -89,38 +76,6 @@ export function max(input: number[]): number {
   let result = 0;
   for (const value of input) {
     if (value > result) {
-      result = value;
-    }
-  }
-  return result;
-}
-
-/**
- * Returns the maximum value of a 2d array.
- * @param input - The 2d array to scan.
- * @returns The largest value, or 0 when every value is negative.
- */
-export function max2d(input: number[][]): number {
-  let result = 0;
-  for (const row of input) {
-    for (const value of row) {
-      if (value > result) {
-        result = value;
-      }
-    }
-  }
-  return result;
-}
-
-/**
- * Returns the minimum value of an array.
- * @param input - The array to scan.
- * @returns The smallest value, or Infinity when the array is empty.
- */
-export function min(input: number[]): number {
-  let result = Infinity;
-  for (const value of input) {
-    if (value < result) {
       result = value;
     }
   }

@@ -7,19 +7,6 @@
  */
 
 /**
- * Creates an empty array (filled with undefined).
- * @param n - Length of the array.
- * @returns An array of `n` undefined values.
- */
-export function empty(n: number): undefined[] {
-  const output: undefined[] = [];
-  for (let i = 0; i < n; i++) {
-    output.push(undefined);
-  }
-  return output;
-}
-
-/**
  * Creates an array filled with index values.
  * @param n - Length of the array.
  * @returns An array containing the integers from 0 to `n - 1`.
@@ -53,15 +40,6 @@ export function filled(n: number, v: number): number[] {
  */
 export function zeros(n: number): number[] {
   return filled(n, 0);
-}
-
-/**
- * Creates an array filled with ones.
- * @param n - Length of the array.
- * @returns An array of `n` ones.
- */
-export function ones(n: number): number[] {
-  return filled(n, 1);
 }
 
 /**

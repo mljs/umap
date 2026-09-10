@@ -9,11 +9,11 @@
  */
 
 import type { DistanceFn, RandomFn, Vectors } from '../types.ts';
-import { tauRand } from '../utils.ts';
+import { rejectionSample, tauRand } from '../utils.ts';
 
 import { at } from './checkedAt.ts';
 import type { Heap } from './heap.ts';
-import { heapPush, makeHeap, rejectionSample } from './heap.ts';
+import { heapPush, makeHeap } from './heap.ts';
 import type { DeheapSortResult } from './heapOperations.ts';
 import { buildCandidates, deheapSort } from './heapOperations.ts';
 

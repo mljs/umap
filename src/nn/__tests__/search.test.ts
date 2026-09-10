@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 
+import { nearestNeighborIndex } from '../../__tests__/embeddings.ts';
 import { makeRandom } from '../../__tests__/random.ts';
 import { euclidean } from '../../metrics.ts';
 import type { RandomFn, Vectors } from '../../types.ts';
@@ -70,7 +71,7 @@ test('initFromTree brings the true nearest neighbor in more often than chance', 
   let found = 0;
 
   for (let i = 0; i < queryPoints.length; i++) {
-    const nearest = nearestIndex(data, at(queryPoints, i));
+    const nearest = nearestNeighborIndex(data, at(queryPoints, i));
 
     if (at(heap[0], i).includes(nearest)) found++;
   }
@@ -111,26 +112,4 @@ function positiveOnly(values: number[]): number[] {
   }
 
   return kept;
-}
-
-/**
- * Index of the point of `data` closest to `point`.
- * @param data - The candidate points.
- * @param point - The point to locate.
- * @returns Index of the nearest point.
- */
-function nearestIndex(data: Vectors, point: number[]): number {
-  let bestIndex = 0;
-  let bestDistance = Infinity;
-
-  for (let i = 0; i < data.length; i++) {
-    const distance = euclidean(at(data, i), point);
-
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestIndex = i;
-    }
-  }
-
-  return bestIndex;
 }

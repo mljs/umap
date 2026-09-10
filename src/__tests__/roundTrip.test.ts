@@ -12,6 +12,7 @@ import { UMAP } from '../index.ts';
 import { at } from '../nn/checkedAt.ts';
 
 import { blobs } from './blobs.ts';
+import { maxAbsoluteDifference } from './embeddings.ts';
 import { makeRandom } from './random.ts';
 
 // A fit of 150 points over the default 500 epochs exceeds the 5s vitest
@@ -222,28 +223,4 @@ function round(): Round {
 function clone<T>(value: T): T {
   const text = JSON.stringify(value);
   return JSON.parse(text) as T;
-}
-
-/**
- * Largest absolute difference between two embeddings of the same shape.
- * @param a - First embedding.
- * @param b - Second embedding.
- * @returns The largest per-coordinate distance.
- */
-function maxAbsoluteDifference(a: Vectors, b: Vectors): number {
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    const left = a[i];
-    const right = b[i];
-    if (left === undefined || right === undefined) {
-      throw new Error(`missing row ${i}`);
-    }
-    for (let j = 0; j < left.length; j++) {
-      const difference = Math.abs((left[j] ?? 0) - (right[j] ?? 0));
-      if (difference > result) {
-        result = difference;
-      }
-    }
-  }
-  return result;
 }

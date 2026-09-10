@@ -3,11 +3,11 @@
  * Copyright 2019 Google LLC. Licensed under the Apache License, Version 2.0.
  * Modified for ml-umap: ported to strict TypeScript; the algorithms operating
  * on a heap (buildCandidates, deheapSort, smallestFlagged) live in
- * ./heapOperations.ts to keep files short.
+ * ./heapOperations.ts to keep files short, and `rejectionSample` is the shared
+ * one of ../utils.ts.
  */
 
-import type { RandomFn } from '../types.ts';
-import { filled, tauRandInt, zeros } from '../utils.ts';
+import { filled } from '../utils.ts';
 
 /**
  * A heap used for approximate nearest neighbor search, maintaining a list of
@@ -30,40 +30,6 @@ export function makeHeap(nPoints: number, size: number): Heap {
     makeArrays(nPoints, size, Infinity),
     makeArrays(nPoints, size, 0),
   ];
-}
-
-/**
- * Generate `nSamples` many integers from 0 to `poolSize` such that no integer
- * is selected twice. The duplication constraint is achieved via rejection
- * sampling.
- * @param nSamples - Number of integers to draw.
- * @param poolSize - Exclusive upper bound of the pool to draw from.
- * @param random - Random number generator.
- * @returns The sampled integers.
- */
-export function rejectionSample(
-  nSamples: number,
-  poolSize: number,
-  random: RandomFn,
-): number[] {
-  const result = zeros(nSamples);
-  for (let i = 0; i < nSamples; i++) {
-    let rejectSample = true;
-    let j = 0;
-    while (rejectSample) {
-      j = tauRandInt(poolSize, random);
-      let broken = false;
-      for (let k = 0; k < i; k++) {
-        if (j === result[k]) {
-          broken = true;
-          break;
-        }
-      }
-      if (!broken) rejectSample = false;
-    }
-    result[i] = j;
-  }
-  return result;
 }
 
 /**

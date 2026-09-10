@@ -9,7 +9,8 @@
 
 import { atFloat64, atInt32 } from './arrayAt.ts';
 import { sortedSlots } from './ordering.ts';
-import { SparseMatrix, fromParts } from './sparseMatrix.ts';
+import type { SparseMatrix } from './sparseMatrix.ts';
+import { fromParts } from './sparseMatrix.ts';
 
 /**
  * Transposes a sparse matrix.
@@ -26,38 +27,6 @@ export function transpose(matrix: SparseMatrix): SparseMatrix {
     length,
     irregular,
   );
-}
-
-/**
- * Constructs a sparse identity matrix.
- * @param size - `[nRows, nCols]` of the matrix.
- * @returns The identity matrix.
- */
-export function identity(size: number[]): SparseMatrix {
-  const matrix = new SparseMatrix([], [], [], size);
-  const nRows = matrix.nRows;
-  if (!(nRows > 0)) return matrix;
-  if (!((nRows | 0) === nRows && nRows <= matrix.nCols)) {
-    // Upstream stores the diagonal one entry at a time, which throws when a
-    // row has no matching column. Keep that by falling back to `set`.
-    for (let i = 0; i < nRows; i++) matrix.set(i, i, 1);
-    return matrix;
-  }
-  const rows = new Int32Array(nRows);
-  const cols = new Int32Array(nRows);
-  const values = new Float64Array(nRows);
-  for (let i = 0; i < nRows; i++) {
-    rows[i] = i;
-    cols[i] = i;
-    values[i] = 1;
-  }
-  const store = matrix.store;
-  store.rows = rows;
-  store.cols = cols;
-  store.values = values;
-  store.length = nRows;
-  store.index = null;
-  return matrix;
 }
 
 /**

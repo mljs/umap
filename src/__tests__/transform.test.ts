@@ -10,7 +10,7 @@
 import { expect, test } from 'vitest';
 
 import { smoothKNNDistance } from '../fuzzy/smoothKnn.ts';
-import { UMAP, euclidean } from '../index.ts';
+import { UMAP } from '../index.ts';
 
 import {
   additionalData,
@@ -18,6 +18,7 @@ import {
   testData,
   testLabels,
 } from './data/upstream-fixtures.ts';
+import { nearestNeighborIndex } from './embeddings.ts';
 import { makeRandom } from './random.ts';
 
 // A full fit is 500 epochs over 100 points and exceeds the 5s vitest default.
@@ -128,27 +129,6 @@ function deepCopy(values: number[][]): number[][] {
     copy[i] = row.slice();
   }
   return copy;
-}
-
-/**
- * Index of the item closest to a point under the euclidean metric.
- * @param items - The candidate points.
- * @param point - The point to locate.
- * @returns Index of the nearest item.
- */
-function nearestNeighborIndex(items: number[][], point: number[]): number {
-  let bestIndex = 0;
-  let bestDistance = Infinity;
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    if (item === undefined) continue;
-    const distance = euclidean(item, point);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestIndex = i;
-    }
-  }
-  return bestIndex;
 }
 
 test(
