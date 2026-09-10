@@ -1,0 +1,357 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ml-umap</title><meta name="description" content="Documentation for ml-umap"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">ml-umap</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>ml-umap</h1></div><div class="tsd-panel tsd-typography"><h1 id="ml-umap" class="tsd-anchor-link">ml-umap<a href="#ml-umap" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p><a href="https://www.npmjs.com/package/ml-umap"><img src="https://img.shields.io/npm/v/ml-umap.svg" alt="NPM version"></a>
+<a href="https://www.npmjs.com/package/ml-umap"><img src="https://img.shields.io/npm/dm/ml-umap.svg" alt="npm download"></a>
+<a href="https://codecov.io/gh/mljs/umap"><img src="https://img.shields.io/codecov/c/github/mljs/umap.svg" alt="test coverage"></a>
+<a href="https://github.com/mljs/umap/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/ml-umap.svg" alt="license"></a></p>
+<p>UMAP dimensionality reduction, in TypeScript.</p>
+<p>Derived from <a href="https://github.com/PAIR-code/umap-js">umap-js</a>, with model
+persistence, spectral initialization and several upstream bug fixes. See
+<a href="#differences-from-umap-js">Differences from umap-js</a>.</p>
+<h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="console"><span class="hl-0">npm install ml-umap</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="usage" class="tsd-anchor-link">Usage<a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="js"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">UMAP</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;ml-umap&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">// Twelve samples of three measurements each, in two well separated groups.</span><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">trainingData</span><span class="hl-0"> = [</span><br/><span class="hl-0">  [</span><span class="hl-7">1.0</span><span class="hl-0">, </span><span class="hl-7">2.0</span><span class="hl-0">, </span><span class="hl-7">3.0</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">1.1</span><span class="hl-0">, </span><span class="hl-7">2.2</span><span class="hl-0">, </span><span class="hl-7">3.1</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">0.9</span><span class="hl-0">, </span><span class="hl-7">1.8</span><span class="hl-0">, </span><span class="hl-7">2.9</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">1.2</span><span class="hl-0">, </span><span class="hl-7">2.1</span><span class="hl-0">, </span><span class="hl-7">3.2</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">0.8</span><span class="hl-0">, </span><span class="hl-7">2.0</span><span class="hl-0">, </span><span class="hl-7">3.1</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">1.05</span><span class="hl-0">, </span><span class="hl-7">1.95</span><span class="hl-0">, </span><span class="hl-7">2.95</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">8.0</span><span class="hl-0">, </span><span class="hl-7">9.0</span><span class="hl-0">, </span><span class="hl-7">7.0</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">8.2</span><span class="hl-0">, </span><span class="hl-7">9.1</span><span class="hl-0">, </span><span class="hl-7">7.2</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">7.9</span><span class="hl-0">, </span><span class="hl-7">8.8</span><span class="hl-0">, </span><span class="hl-7">6.9</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">8.1</span><span class="hl-0">, </span><span class="hl-7">9.3</span><span class="hl-0">, </span><span class="hl-7">7.1</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">7.8</span><span class="hl-0">, </span><span class="hl-7">9.0</span><span class="hl-0">, </span><span class="hl-7">7.3</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">8.05</span><span class="hl-0">, </span><span class="hl-7">8.95</span><span class="hl-0">, </span><span class="hl-7">7.05</span><span class="hl-0">],</span><br/><span class="hl-0">];</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">umap</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-8">UMAP</span><span class="hl-0">({ </span><span class="hl-2">numberOfComponents:</span><span class="hl-0"> </span><span class="hl-7">2</span><span class="hl-0">, </span><span class="hl-2">numberOfNeighbors:</span><span class="hl-0"> </span><span class="hl-7">5</span><span class="hl-0"> });</span><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">embedding</span><span class="hl-0"> = </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">fit</span><span class="hl-0">(</span><span class="hl-2">trainingData</span><span class="hl-0">);</span><br/><span class="hl-4">// embedding is one [x, y] pair per input row, in the same order</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A dataset has to hold more points than <code>numberOfNeighbors</code>, which defaults to
+<code>15</code>; the twelve points above are fitted with a neighbourhood of five.</p>
+<p><code>fit</code> runs the whole optimization. To drive it yourself — to render progress, or
+to yield to the event loop — use the stepwise API:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">umap</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-8">UMAP</span><span class="hl-0">({ </span><span class="hl-2">numberOfNeighbors:</span><span class="hl-0"> </span><span class="hl-7">5</span><span class="hl-0"> });</span><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">totalEpochs</span><span class="hl-0"> = </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">initializeFit</span><span class="hl-0">(</span><span class="hl-2">trainingData</span><span class="hl-0">);</span><br/><br/><span class="hl-1">for</span><span class="hl-0"> (</span><span class="hl-5">let</span><span class="hl-0"> </span><span class="hl-2">epoch</span><span class="hl-0"> = </span><span class="hl-7">0</span><span class="hl-0">; </span><span class="hl-2">epoch</span><span class="hl-0"> &lt; </span><span class="hl-2">totalEpochs</span><span class="hl-0">; </span><span class="hl-2">epoch</span><span class="hl-0">++) {</span><br/><span class="hl-0">  </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">step</span><span class="hl-0">();</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">embedding</span><span class="hl-0"> = </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">getEmbedding</span><span class="hl-0">();</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>getEmbedding()</code> returns a copy. Use <code>getEmbeddingRef()</code> for the live array the
+optimizer writes into, which is what you want when animating a running fit.</p>
+<p>There is also <code>fitAsync(data, callback)</code>, which yields between epochs and stops
+early if the callback returns <code>false</code>.</p>
+<h2 id="projecting-new-data" class="tsd-anchor-link">Projecting new data<a href="#projecting-new-data" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>A fitted model can place points it has never seen into the same space:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">newPoints</span><span class="hl-0"> = [</span><br/><span class="hl-0">  [</span><span class="hl-7">1.05</span><span class="hl-0">, </span><span class="hl-7">2.05</span><span class="hl-0">, </span><span class="hl-7">3.0</span><span class="hl-0">],</span><br/><span class="hl-0">  [</span><span class="hl-7">8.1</span><span class="hl-0">, </span><span class="hl-7">9.1</span><span class="hl-0">, </span><span class="hl-7">7.2</span><span class="hl-0">],</span><br/><span class="hl-0">];</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">umap</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-8">UMAP</span><span class="hl-0">({ </span><span class="hl-2">numberOfNeighbors:</span><span class="hl-0"> </span><span class="hl-7">5</span><span class="hl-0"> });</span><br/><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">fit</span><span class="hl-0">(</span><span class="hl-2">trainingData</span><span class="hl-0">);</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">projected</span><span class="hl-0"> = </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">transform</span><span class="hl-0">(</span><span class="hl-2">newPoints</span><span class="hl-0">);</span><br/><span class="hl-4">// one [x, y] pair per new point, next to the group it belongs to</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>transform</code> is not the same as fitting the combined data. It assumes the new
+points are drawn from the same distribution as the training set, and it never
+moves the fitted embedding.</p>
+<p>Projections are reproducible: the same batch, on the same fitted model, always
+lands on the same coordinates — including after <code>toJSON</code> / <code>fromJSON</code>, because
+the projection draws from a dedicated <code>transformSeed</code> (default <code>42</code>) instead of
+from the stream the fit ran on. Pass a different one per call to get a
+different projection:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">projected</span><span class="hl-0"> = </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">transform</span><span class="hl-0">(</span><span class="hl-2">newPoints</span><span class="hl-0">, { </span><span class="hl-2">transformSeed:</span><span class="hl-0"> </span><span class="hl-7">7</span><span class="hl-0"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="the-batch-is-the-unit-of-a-projection" class="tsd-anchor-link">The batch is the unit of a projection<a href="#the-batch-is-the-unit-of-a-projection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A batch is projected as a whole, so where one point lands depends on the rest of
+the batch it was passed in. Projecting a 60-point batch and then its first 59
+points moves those 59 by up to 8.5% of the width of the embedding — enough to
+see, far too little to change the cluster any of them belongs to. Three separate
+things couple the points of a batch: the optimizer draws its negative samples
+for the whole batch out of one stream, the membership strengths of a row are
+zeroed against the training point whose index matches the row's position, and
+the edge-pruning threshold is normalised by the largest membership strength in
+the batch. umap-learn has the same limitation, for the same reasons.</p>
+<p>So project together the points you intend to compare, and do not expect a point
+projected alone to match the same point projected inside a batch. The fitted
+embedding itself never moves, whatever the batch holds.</p>
+<h2 id="saving-and-loading-a-model" class="tsd-anchor-link">Saving and loading a model<a href="#saving-and-loading-a-model" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="js"><span class="hl-1">import</span><span class="hl-0"> { </span><span class="hl-2">UMAP</span><span class="hl-0"> } </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&#39;ml-umap&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">umap</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-8">UMAP</span><span class="hl-0">({ </span><span class="hl-2">numberOfNeighbors:</span><span class="hl-0"> </span><span class="hl-7">5</span><span class="hl-0"> });</span><br/><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">fit</span><span class="hl-0">(</span><span class="hl-2">trainingData</span><span class="hl-0">);</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">model</span><span class="hl-0"> = </span><span class="hl-2">umap</span><span class="hl-0">.</span><span class="hl-8">toJSON</span><span class="hl-0">(); </span><span class="hl-4">// a plain object, safe to JSON.stringify</span><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">restored</span><span class="hl-0"> = </span><span class="hl-6">UMAP</span><span class="hl-0">.</span><span class="hl-8">fromJSON</span><span class="hl-0">(</span><span class="hl-2">model</span><span class="hl-0">); </span><span class="hl-4">// UMAP.load is an alias</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">projected</span><span class="hl-0"> = </span><span class="hl-2">restored</span><span class="hl-0">.</span><span class="hl-8">transform</span><span class="hl-0">(</span><span class="hl-2">newPoints</span><span class="hl-0">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The model stores the training data, the embedding, the k-nearest-neighbour
+arrays, the fitted <code>a</code>/<code>b</code> curve parameters and every scalar option. The
+random-projection forest and the search graph are rebuilt on load rather than
+stored, which keeps the model roughly a third of the size.</p>
+<p>A model fitted with a custom <code>distanceFunction</code> records <code>metric: 'custom'</code> and
+<code>fromJSON</code> throws unless you supply the same function again, since substituting
+a different one would silently produce wrong projections:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">restored</span><span class="hl-0"> = </span><span class="hl-6">UMAP</span><span class="hl-0">.</span><span class="hl-8">fromJSON</span><span class="hl-0">(</span><span class="hl-2">model</span><span class="hl-0">, { </span><span class="hl-2">distanceFunction:</span><span class="hl-0"> </span><span class="hl-2">myDistance</span><span class="hl-0"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A loaded model can <code>transform</code>, but cannot be re-fitted or stepped — the fuzzy
+graph a fit needs is not part of the format.</p>
+<h2 id="options" class="tsd-anchor-link">Options<a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>numberOfComponents</code></td>
+<td><code>2</code></td>
+<td>Dimensions of the output embedding</td>
+</tr>
+<tr>
+<td><code>numberOfNeighbors</code></td>
+<td><code>15</code></td>
+<td>Local neighbourhood size</td>
+</tr>
+<tr>
+<td><code>minimumDistance</code></td>
+<td><code>0.1</code></td>
+<td>Minimum separation of embedded points</td>
+</tr>
+<tr>
+<td><code>spread</code></td>
+<td><code>1</code></td>
+<td>Scale of the embedded points</td>
+</tr>
+<tr>
+<td><code>numberOfEpochs</code></td>
+<td><code>0</code></td>
+<td>Optimization epochs; <code>0</code> picks 200-500 from the dataset size</td>
+</tr>
+<tr>
+<td><code>metric</code></td>
+<td><code>'euclidean'</code></td>
+<td><code>'euclidean'</code> or <code>'cosine'</code></td>
+</tr>
+<tr>
+<td><code>distanceFunction</code></td>
+<td><code>euclidean</code></td>
+<td>A custom distance; wins over <code>metric</code></td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td><code>'random'</code></td>
+<td><code>'random'</code> or <code>'spectral'</code></td>
+</tr>
+<tr>
+<td><code>random</code></td>
+<td>seeded</td>
+<td>Source of randomness; pass <code>Math.random</code> for runs that differ</td>
+</tr>
+<tr>
+<td><code>seed</code></td>
+<td><code>42</code></td>
+<td>Seed of the default random source of a fit</td>
+</tr>
+<tr>
+<td><code>learningRate</code></td>
+<td><code>1</code></td>
+<td>Initial SGD learning rate</td>
+</tr>
+<tr>
+<td><code>negativeSampleRate</code></td>
+<td><code>5</code></td>
+<td>Negative samples per positive edge</td>
+</tr>
+<tr>
+<td><code>repulsionStrength</code></td>
+<td><code>1</code></td>
+<td>Weight of negative samples</td>
+</tr>
+<tr>
+<td><code>localConnectivity</code></td>
+<td><code>1</code></td>
+<td>Locally connected neighbours assumed per point</td>
+</tr>
+<tr>
+<td><code>setOperationMixRatio</code></td>
+<td><code>1</code></td>
+<td>Blend of union and intersection for the fuzzy set</td>
+</tr>
+<tr>
+<td><code>transformQueueSize</code></td>
+<td><code>4</code></td>
+<td>Search breadth multiplier used by <code>transform</code></td>
+</tr>
+<tr>
+<td><code>transformSeed</code></td>
+<td><code>42</code></td>
+<td>Seed the projection of new points draws from</td>
+</tr>
+</tbody>
+</table>
+<h3 id="choosing-numberofcomponents" class="tsd-anchor-link">Choosing numberOfComponents<a href="#choosing-numberofcomponents" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Two or three components is what a plot needs, and that is what the default is
+for. When the embedding feeds something else — a clustering, a classifier, a
+nearest-neighbour index — more room helps, but not without limit: neighbourhood
+preservation, trustworthiness and continuity rise steeply and then go flat, and
+the knee sits between eight and ten components on every dataset measured,
+including one built with an intrinsic dimension of 20. Downstream accuracy
+behaves the same way. On 20 overlapping Gaussians in 50 dimensions, leave-one-out
+10-nearest-neighbour accuracy went 0.353 at two components, 0.488 at five, 0.514
+at eight and 0.517 at ten, then stopped moving — against 0.542 measured on the
+input data itself, with a seed-to-seed spread of 0.005 to 0.01.</p>
+<table>
+<thead>
+<tr>
+<th>The embedding is for</th>
+<th>numberOfComponents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>looking at</td>
+<td><code>2</code> or <code>3</code></td>
+</tr>
+<tr>
+<td>clustering, a classifier, a neighbour index</td>
+<td><code>10</code></td>
+</tr>
+</tbody>
+</table>
+<p>Do not derive the value from an estimate of the intrinsic dimension of the data.
+Levina-Bickel MLE, TwoNN, correlation dimension and the PCA participation ratio
+all overshoot the useful number of components by three to twenty times as soon as
+the data has cluster structure or noise — 25 and 29 where the quality curves had
+flattened by 10 — and they follow the noise rather than the structure: on a
+5-dimensional subspace of a 100-dimensional space, per-coordinate Gaussian noise
+of standard deviation 0.05 takes the MLE from 4.7 to 10.1 and TwoNN from 5.5 to
+17.5. A constant near ten is the better estimator. Neither umap-learn nor the
+UMAP paper offers a selection rule of its own; the paper calls the effect of the
+embedding dimension &quot;largely self-evident&quot;.</p>
+<h3 id="reproducibility" class="tsd-anchor-link">Reproducibility<a href="#reproducibility" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Runs repeat by default. <code>random</code> is a generator seeded with <code>seed</code> (default
+<code>42</code>), built fresh for each model, so fitting the same data twice gives the same
+embedding. Change <code>seed</code> for a different embedding that is just as repeatable:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">umap</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-8">UMAP</span><span class="hl-0">({ </span><span class="hl-2">seed:</span><span class="hl-0"> </span><span class="hl-7">7</span><span class="hl-0"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Pass <code>random</code> to draw from a source of your own; an unseeded one is what makes
+every run differ:</p>
+<pre><code class="js"><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">umap</span><span class="hl-0"> = </span><span class="hl-5">new</span><span class="hl-0"> </span><span class="hl-8">UMAP</span><span class="hl-0">({ </span><span class="hl-2">random:</span><span class="hl-0"> </span><span class="hl-2">Math</span><span class="hl-0">.</span><span class="hl-2">random</span><span class="hl-0"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>random</code> wins over <code>seed</code>, and <code>transform</code> uses neither — it draws from
+<code>transformSeed</code>.</p>
+<h3 id="spectral-initialization" class="tsd-anchor-link">Spectral initialization<a href="#spectral-initialization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>init: 'spectral'</code> starts from the leading eigenvectors of the normalized graph
+Laplacian instead of a uniform random cloud, which preserves global structure
+better and varies less between seeds. It costs roughly 1% of the fit time. It is
+opt-in while its quality is evaluated on more datasets, and falls back to the
+random initialization if the eigenvectors do not converge.</p>
+<h2 id="playground" class="tsd-anchor-link">Playground<a href="#playground" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>npm run dev</code> serves an interactive page — Vite and React, in <a href="media/demo">demo/</a> —
+that fits a dataset one animation frame at a time, so what a parameter does is
+visible while it happens. It is a development tool and is not part of the
+published package.</p>
+<p>Every parameter is a field on the left, and the fit restarts a quarter of a
+second after the last edit. Hovering a point reads the row behind it: the
+infrared spectrum of that pill, or the four measurements of that flower, drawn
+against the range of the whole dataset so two hovers can be compared.</p>
+<p><code>held out for transform</code> keeps one point in five or ten out of the fit
+entirely. Once the fit is over, <code>Project N held out</code> runs <code>transform</code> on them
+and draws each as a ring: a ring landing on the cluster of its own colour is
+the projection path working, and the fitted embedding never moves while it
+happens.</p>
+<p>Two datasets are wired in:</p>
+<ul>
+<li><strong>Iris</strong>, the 150 flowers of <a href="https://github.com/mljs/dataset-iris"><code>ml-dataset-iris</code></a>,
+four measurements each.</li>
+<li><strong>Ecstasy pills</strong>, 486 pills seized in north-east Switzerland, fitted as
+their mid-infrared spectra over 1024 wavenumbers and coloured by seizure.
+The spectra are published by Patiny, Zasso, Esseiva and Wist,
+<a href="https://doi.org/10.5281/zenodo.4120340">10.5281/zenodo.4120340</a>, CC-BY-4.0.
+What is committed in <code>demo/datasets/data/ecstasy.json</code> is the principal
+component model of them that <a href="https://github.com/cheminfo/react-cheminfo">react-cheminfo</a>
+demonstrates — scores, loadings, mean and scales — and the page rebuilds the
+spectra from it on load, which keeps a 4 MB matrix out of the repository. The
+rebuilt spectra carry the standard normal variate the published processing
+applied: every one has a median within 0.06 of zero and a standard deviation
+between 0.95 and 1.06.</li>
+</ul>
+<h2 id="migrating-from-umap-js" class="tsd-anchor-link">Migrating from umap-js<a href="#migrating-from-umap-js" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The abbreviated option names are spelled out here, so code ported from umap-js
+has to rename them. A serialized model uses the same names as the options.</p>
+<table>
+<thead>
+<tr>
+<th>umap-js</th>
+<th>ml-umap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nComponents</code></td>
+<td><code>numberOfComponents</code></td>
+</tr>
+<tr>
+<td><code>nNeighbors</code></td>
+<td><code>numberOfNeighbors</code></td>
+</tr>
+<tr>
+<td><code>nEpochs</code></td>
+<td><code>numberOfEpochs</code></td>
+</tr>
+<tr>
+<td><code>minDist</code></td>
+<td><code>minimumDistance</code></td>
+</tr>
+<tr>
+<td><code>setOpMixRatio</code></td>
+<td><code>setOperationMixRatio</code></td>
+</tr>
+<tr>
+<td><code>distanceFn</code></td>
+<td><code>distanceFunction</code></td>
+</tr>
+<tr>
+<td><code>targetNNeighbors</code></td>
+<td><code>targetNumberOfNeighbors</code></td>
+</tr>
+</tbody>
+</table>
+<p>Every other option keeps the name it has upstream.</p>
+<h2 id="differences-from-umap-js" class="tsd-anchor-link">Differences from umap-js<a href="#differences-from-umap-js" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>This port fixes several defects in umap-js, all of which affect <code>transform</code>:</p>
+<ul>
+<li><code>heap.smallestFlagged</code> had an inverted loop condition, so it always returned
+<code>-1</code> and the graph-search refinement never ran.</li>
+<li><code>initFromTree</code> returned instead of breaking on a leaf's padding, so only the
+first query point was ever seeded from the random-projection forest. Fixing
+both raised transform recall from 43.9% to 58.1% on uniform 32-dimensional
+data.</li>
+<li><code>optimizeLayout</code> stopped on <code>currentEpoch === nEpochs</code>. Since <code>transform</code>
+runs a third of the configured epochs, any epoch count not divisible by three
+never satisfied that equality and <code>transform</code> looped forever.</li>
+<li><code>transform</code> ran the optimizer at four times the reference learning rate, and
+let the fitted embedding move whenever the batch happened to be the same size
+as the training set, silently corrupting the model in place.</li>
+<li><code>transform</code> drew from the model's own <code>random</code>, so it both depended on and
+advanced the stream the fit ran on: a projection could never be replayed, and
+a model reloaded from JSON — whose <code>random</code> falls back to <code>Math.random</code> —
+placed the same points somewhere else on every load. It draws from
+<code>transformSeed</code> here, as umap-learn draws from <code>transform_seed</code>.</li>
+<li><code>computeMembershipStrengths</code> applied its self test (&quot;a point is not similar
+to itself&quot;) when projecting new data, where rows index the batch and columns
+index the training set. Those are unrelated index spaces, so it zeroed the
+strength of any pair whose training index happened to equal a batch row
+position. umap-learn guards this with a <code>bipartite</code> flag.</li>
+</ul>
+<p>Two behaviours also differ without a defect being involved: <code>random</code> defaults
+to a generator seeded with <code>seed</code> here, so a fit repeats unless <code>Math.random</code> is
+asked for, where upstream defaults to <code>Math.random</code> and no run can be replayed;
+and <code>getEmbedding()</code> returns a copy, where upstream hands out the live array.</p>
+<h2 id="validated-against-umap-js" class="tsd-anchor-link">Validated against umap-js<a href="#validated-against-umap-js" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The port is checked against the published <code>umap-js@1.4.0</code> it derives from, not
+merely eyeballed. On the current code the fit path is structurally identical to
+upstream: the same edge count, the same <code>head</code> and <code>tail</code> sums, the same
+<code>epochsPerSample</code> sum, the same resolved <code>numberOfEpochs</code>, and the same total
+number of RNG draws. With the <code>a</code>/<code>b</code> curve parameters forced equal, the two
+embeddings then agree bit for bit — 200/200 and 300/300 coordinates at n = 100,
+and 1500/1500 and 2250/2250 at n = 750.</p>
+<p><code>a</code> and <code>b</code> are the sole divergence, and they differ from a dependency version
+rather than from a change of behaviour: both implementations fit the same UMAP
+curve by non-linear least squares, ml-umap through <code>ml-levenberg-marquardt</code>
+5.1.0 and upstream through the 2.0.0 it bundles. The two solvers stop at
+slightly different points, which shifts every coordinate downstream.</p>
+<p>Because that comparison has been made, <code>umap-js</code> is not a devDependency here.
+The A/B benchmarks import it lazily and skip the upstream arm when it is
+absent, so re-checking ml-umap against a future upstream release is one install
+away:</p>
+<pre><code class="console"><span class="hl-0">npm i -D umap-js</span><br/><span class="hl-0">node benchmark/fit.js</span><br/><span class="hl-0">node benchmark/paired-fit.js</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><a href="media/LICENSE">MIT</a>.</p>
+<p>This package contains code derived from
+<a href="https://github.com/PAIR-code/umap-js">umap-js</a>, Copyright 2019 Google LLC,
+licensed under the Apache License 2.0. See <a href="media/NOTICE">NOTICE</a>.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#ml-umap"><span>ml-<wbr/>umap</span></a><ul><li><a href="#installation"><span>Installation</span></a></li><li><a href="#usage"><span>Usage</span></a></li><li><a href="#projecting-new-data"><span>Projecting new data</span></a></li><li><ul><li><a href="#the-batch-is-the-unit-of-a-projection"><span>The batch is the unit of a projection</span></a></li></ul></li><li><a href="#saving-and-loading-a-model"><span>Saving and loading a model</span></a></li><li><a href="#options"><span>Options</span></a></li><li><ul><li><a href="#choosing-numberofcomponents"><span>Choosing number<wbr/>Of<wbr/>Components</span></a></li><li><a href="#reproducibility"><span>Reproducibility</span></a></li><li><a href="#spectral-initialization"><span>Spectral initialization</span></a></li></ul></li><li><a href="#playground"><span>Playground</span></a></li><li><a href="#migrating-from-umap-js"><span>Migrating from umap-<wbr/>js</span></a></li><li><a href="#differences-from-umap-js"><span>Differences from umap-<wbr/>js</span></a></li><li><a href="#validated-against-umap-js"><span>Validated against umap-<wbr/>js</span></a></li><li><a href="#license"><span>License</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">ml-umap</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer></footer><div class="overlay"></div></body></html>

@@ -1,0 +1,29 @@
+ml-umap
+Copyright (c) mljs contributors
+
+This product includes software derived from umap-js
+(https://github.com/PAIR-code/umap-js), Copyright 2019 Google LLC,
+licensed under the Apache License, Version 2.0.
+
+The derived source files under src/ carry an individual header identifying
+them as derived work and describing the modifications made. Notable
+modifications relative to umap-js:
+
+  * Ported from the original TypeScript to strict TypeScript targeting
+    ml-umap's compiler settings.
+  * src/nn/heap.ts: fixed an inverted loop condition in smallestFlagged
+    (`i > ind.length` -> `i < ind.length`). Upstream's condition is false on
+    entry, so the function always returned -1 and the graph-search refinement
+    in nn-descent never executed. This affects transform() only; fit() does
+    not reach that code path.
+  * src/umap.ts: getEmbedding() returns a copy rather than the live internal
+    array; getEmbeddingRef() provides the previous behaviour.
+  * src/transform.ts: transform() no longer aliases the fitted embedding into
+    the optimizer's tail slot, so projecting a batch the same size as the
+    training set can no longer corrupt the model.
+  * src/sparse/: the sparse matrix is a coordinate/typed-array implementation
+    replacing upstream's string-keyed Map, retaining identical semantics.
+  * src/serialize.ts: new code, not derived from umap-js.
+
+You may obtain a copy of the Apache License, Version 2.0 at
+http://www.apache.org/licenses/LICENSE-2.0
