@@ -1,0 +1,10 @@
+{
+  "extends": "@zakodium/tsconfig/jsx",
+  "compilerOptions": {
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "rootDir": "..",
+    "types": ["vite/client"]
+  },
+  "include": ["."]
+}

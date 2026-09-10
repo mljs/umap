@@ -1,40 +1,70 @@
 {
-  "name": "ml-ml-umap",
+  "name": "ml-umap",
   "version": "0.0.0",
-  "description": "",
-  "main": "lib/index.js",
-  "module": "src/index.js",
+  "license": "MIT",
+  "description": "UMAP dimensionality reduction",
+  "keywords": [
+    "umap",
+    "dimensionality-reduction",
+    "embedding",
+    "machine-learning"
+  ],
+  "author": "Luc Patiny",
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js"
+  },
   "files": [
     "lib",
-    "src"
+    "src",
+    "NOTICE"
   ],
   "scripts": {
-    "eslint": "eslint src",
-    "eslint-fix": "npm run eslint -- --fix",
-    "prepack": "rollup -c",
-    "prettier": "prettier --check src",
-    "prettier-write": "prettier --write src",
-    "test": "npm run test-only && npm run eslint && npm run prettier",
-    "test-only": "jest --coverage"
+    "check-types": "tsc --noEmit && tsc --noEmit --project demo/tsconfig.json",
+    "clean": "rimraf coverage lib",
+    "dev": "vite",
+    "eslint": "eslint .",
+    "eslint-fix": "eslint . --fix",
+    "prepack": "npm run tsc",
+    "prettier": "prettier --check .",
+    "prettier-write": "prettier --write .",
+    "test": "npm run test-only && npm run check-types && npm run eslint && npm run prettier",
+    "test-only": "vitest run --coverage",
+    "tsc": "npm run clean && npm run tsc-build",
+    "tsc-build": "tsc --project tsconfig.build.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mljs/ml-umap.git"
+    "url": "git+https://github.com/mljs/umap.git"
   },
-  "keywords": [],
-  "author": "Luc Patiny",
-  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mljs/ml-umap/issues"
+    "url": "https://github.com/mljs/umap/issues"
   },
-  "homepage": "https://github.com/mljs/ml-umap#readme",
+  "homepage": "https://github.com/mljs/umap#readme",
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.16.8",
-    "@types/jest": "^27.4.1",
-    "eslint": "^8.10.0",
-    "eslint-config-cheminfo": "^7.2.2",
-    "jest": "^27.5.1",
-    "prettier": "^2.5.1",
-    "rollup": "^2.69.1"
+    "@types/node": "^26.5.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.0",
+    "@zakodium/tsconfig": "^1.0.5",
+    "benchmark": "^2.1.4",
+    "eslint": "^9.39.5",
+    "eslint-config-cheminfo-react": "^20.1.0",
+    "eslint-config-cheminfo-typescript": "^22.1.0",
+    "ml-dataset-iris": "^1.2.1",
+    "prettier": "^3.9.6",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "rimraf": "^6.1.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "ml-distance": "^5.0.0",
+    "ml-levenberg-marquardt": "^5.1.0",
+    "ml-matrix": "^6.15.0",
+    "ml-xsadd": "^3.0.1"
   }
 }

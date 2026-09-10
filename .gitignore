@@ -80,3 +80,9 @@ tags
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+# Claude Code
+.claude
+
+# Vite build output of the demo
+demo/dist
