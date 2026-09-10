@@ -68,7 +68,10 @@ test('bipartite keeps a strength whose training index equals the row position', 
       strengths.rows[index] === 0 && strengths.cols[index] === 0,
   );
 
-  expect(kept).toStrictEqual([0.951229424500714]);
+  // Math.exp is implementation-approximated, so compare closely rather than
+  // exactly; the point of the test is that the value is kept, not zeroed.
+  expect(kept).toHaveLength(1);
+  expect(kept[0]).toBeCloseTo(0.951229424500714, 12);
 });
 
 test('bipartite changes only the pairs the self test would have zeroed', () => {

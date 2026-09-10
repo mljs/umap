@@ -69,7 +69,7 @@ export function spectralVectors(
   const n = csr.n;
   const maximumSteps = Math.min(
     n,
-    steps ?? Math.max(4 * (dim + 1) + 10, MINIMUM_STEPS),
+    steps ?? Math.max(8 * dim + 40, MINIMUM_STEPS),
   );
   if (maximumSteps < dim) {
     throw new RangeError('spectralVectors: too few steps for the dimension');

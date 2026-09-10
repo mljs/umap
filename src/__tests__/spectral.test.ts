@@ -193,7 +193,12 @@ test('a uniform initialization draws exactly what it drew before', () => {
   expect(embedding[0]).toStrictEqual([6.053599119186401, -3.0161333084106445]);
   expect(embedding[1]).toStrictEqual([-2.0337915420532227, -4.950821399688721]);
   expect(embedding[119]).toStrictEqual([6.194940805435181, 9.693316221237183]);
-  expect(epochsPerSample[0]).toBe(2.644436410158809);
+  // The graph weights this is derived from pass through Math.exp and Math.log
+  // in smoothKNNDistance, which ECMAScript leaves implementation-approximated,
+  // so the last bits are a property of the engine build rather than of us. The
+  // coordinates above are safe by contrast: they are the uniform draw, integer
+  // PRNG arithmetic with no transcendental in the path.
+  expect(epochsPerSample[0]).toBeCloseTo(2.644436410158809, 10);
   expect(head[0]).toBe(3);
   expect(tail[0]).toBe(0);
 });
@@ -202,8 +207,7 @@ test('the uniform initialization is the default', () => {
   expect(DEFAULT_PARAMETERS.init).toBe('random');
 
   // The default and an explicit `init: 'random'` draw from the stream in the
-  // very same order, so the two fits are bit identical and land on the exact
-  // coordinates recorded below.
+  // very same order, so the two fits are bit identical to each other.
   const { X } = blobs(120, 5, 3);
   const byDefault = new UMAP({
     random: makeRandom(3),
@@ -217,11 +221,13 @@ test('the uniform initialization is the default', () => {
     init: 'random',
   }).fit(X);
 
+  // The claim is that the default and an explicit 'random' draw the same
+  // initialization, which is platform independent because both fits consume the
+  // identical stream. The coordinates themselves are not: the 500-epoch SGD is
+  // chaotic in its inputs and Math.pow/Math.exp are implementation-approximated,
+  // so a recorded point is a valid embedding of this data on one machine rather
+  // than a reachable target on another (see the header of index.test.ts).
   expect(byDefault).toStrictEqual(explicit);
-  expect(byDefault[0]).toStrictEqual([1.39966973579613, -0.5085180897830234]);
-  expect(byDefault[1]).toStrictEqual([
-    -6.004144574880468, 0.003439386985661404,
-  ]);
 });
 
 test('a spectral fit clusters the blobs it was given', () => {
@@ -242,4 +248,49 @@ test('a spectral fit clusters the blobs it was given', () => {
   }
 
   expect(clusterRatio(embedding, labels)).toBeLessThan(0.15);
+});
+
+/*
+ * Regression: the Lanczos step budget used to be `4 * (dim + 1) + 10`, which is
+ * too short to converge the dim-th interior eigenpair once dim passes about 5.
+ * The residual gate then rejected the run and the fit fell back to the uniform
+ * random initialization with no signal to the caller, so `init: 'spectral'`
+ * silently stopped being spectral for roughly numberOfComponents 5 to 14 —
+ * exactly the range the README recommends for preprocessing. Measured before
+ * the fix on a connected 300-point graph: 1.5e-5 at dim 2, but 1.5e-2 to 5.1e-2
+ * at dims 6 to 10, against a gate of 1e-2. It self-healed at dim >= 15 only
+ * because the budget grew with dim, which is what identified the budget rather
+ * than the algorithm as the cause.
+ */
+test('eigenpairs converge at every embedding dimension a user might ask for', () => {
+  const csr = toCSR(graphOf(300, 8, 1));
+
+  expect(connectedComponents(csr).count).toBe(1);
+
+  // 6, 10 and 14 are inside the range the short budget used to fail on; 2 and
+  // 20 bracket it. One seed each keeps the run inside the coverage timeout.
+  for (const dim of [2, 6, 10, 14, 20]) {
+    const pairs = spectralVectors(csr, dim, { random: makeRandom(11) });
+
+    expect(pairs).toHaveLength(dim);
+
+    for (const pair of pairs) {
+      expect(pair.residual).toBeLessThan(RESIDUAL_BOUND);
+    }
+  }
+}, 30_000);
+
+test('spectral initialization is used, not silently skipped, at ten dimensions', () => {
+  const { X } = blobs(300, 8, 1);
+  const graph = graphOfData(X, 1);
+
+  const embedding = spectralEmbedding(graph, {
+    numberOfComponents: 10,
+    random: makeRandom(11),
+    data: X,
+  });
+
+  expect(embedding).not.toBeNull();
+  expect(embedding).toHaveLength(300);
+  expect(embedding?.[0]).toHaveLength(10);
 });

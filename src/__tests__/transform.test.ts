@@ -52,7 +52,35 @@ test(
       }
     }
 
-    expect(transformed).toMatchSnapshot();
+    // Deliberately NOT snapshotted. A recorded coordinate is a property of the
+    // machine that recorded it: the SGD is chaotic in its inputs and
+    // Math.pow/Math.exp are implementation-approximated, so the same code lands
+    // elsewhere on another platform. The invariants below are what the
+    // projection actually has to satisfy.
+
+    // Projecting the same batch twice on the same model is reproducible,
+    // because transform draws from its own seeded stream.
+    expect(umap.transform(additionalData)).toStrictEqual(transformed);
+
+    // Every projected point falls inside the space the fit occupies, rather
+    // than being flung outside it.
+    const fitted = umap.getEmbedding();
+    let low = Infinity;
+    let high = -Infinity;
+    for (const row of fitted) {
+      for (const value of row) {
+        if (value < low) low = value;
+        if (value > high) high = value;
+      }
+    }
+    const margin = (high - low) / 2;
+
+    for (const point of transformed) {
+      for (const value of point) {
+        expect(value).toBeGreaterThan(low - margin);
+        expect(value).toBeLessThan(high + margin);
+      }
+    }
   },
   FIT_TIMEOUT,
 );
