@@ -18,10 +18,17 @@ import { findABParams } from '../optimize/abParams.ts';
 const UPSTREAM_LM2 = { a: 1.5694704762346365, b: 0.8941996053733949 };
 
 test('findABParams matches the pinned values for spread=1, minimumDistance=0.1', () => {
-  expect(findABParams(1, 0.1)).toStrictEqual({
-    a: 1.5681358231455382,
-    b: 0.8978140828891751,
-  });
+  const { a, b } = findABParams(1, 0.1);
+
+  // Compared to 12 decimals rather than exactly. The Levenberg-Marquardt fit
+  // runs through Math.pow and Math.exp, which ECMAScript leaves
+  // implementation-approximated, and node 22 lands one ULP below node 24 and 26
+  // on `b` (0.897814082889175 against 0.8978140828891751, about 1.1e-16).
+  // The shift this pin exists to catch is six orders of magnitude larger: LM 2.x
+  // against 5.x moves `a` by 1.3e-3 and `b` by 3.6e-3, so a dependency bump
+  // still fails here loudly.
+  expect(a).toBeCloseTo(1.5681358231455382, 12);
+  expect(b).toBeCloseTo(0.8978140828891751, 12);
 });
 
 test('findABParams stays close to the values umap-js computes with LM 2.x', () => {
